@@ -14,7 +14,8 @@ var checkAuth = function(req, res, next) {
     }
 };
 
-var render_stu = function(username, res) {
+var render_stu = function(username, res, message) {
+    var message = (typeof message==="undefined")?false:message;
     conn.query("select * from course", function(err, courses){ 
         if(err) throw err;
         var sql = util.format("select * from record, class, course where sname='%s' and record.clsno=class.clsno and course.cno=class.cno", username);
@@ -25,7 +26,8 @@ var render_stu = function(username, res) {
             res.render("student", { 
                 username: username, 
                 courses: courses, 
-                records: records 
+                records: records, 
+                message: message
             });
         });
     });
@@ -80,8 +82,12 @@ router.post("/:user/addRecord", checkAuth, function(req, res) {
     var clsno = parseInt(req.param("clsno"));
     var sql = util.format("insert into record values('%s', %d, 0)", user, clsno);
     conn.query(sql, function(err, rows) {
-        if(err)throw err;
-        render_stu(user, res);
+        if(err) {
+            //throw err;
+            render_stu(user, res, "*请选择课程名和课堂名, 同一个课堂不能重复选择");
+        } else {
+            render_stu(user, res);
+        }
     });
 });
 
@@ -136,7 +142,7 @@ router.get("/:courseNo/getClasses", function(req, res) {
     var cno = parseInt(req.param("courseNo"));
     var sql = util.format("select * from class where cno=%d", cno);
     conn.query(sql, function(err, rows) {
-        if(err)throw err;
+        //if(err)throw err;
         res.send(rows);
     });
 });
