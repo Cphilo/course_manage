@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <p>你好，亲爱的<%= username %>同学</p>
+    <h4>你可以在这里进行选课</h4>
+    <form mathod="post" action="/<%= username %>/add_course">
+        课程名:
+        <select>
+            <% courses.forEach(function(course) { %>
+            <option value="course.cno">
+                <%= course.cname %>
+            </option>
+            <% }) %>
+        </select>
+        课堂名:<select>
+                </select>
+        任课教师:<select></select>
+        <input type="submit" value="选课">
+    </form>
+    <h4>下面是你的所有选课记录</h4>
+    <table>
+        <tr>
+            <th>课程名</th>
+            <th>课堂编号</th>
+            <th>任课教师</th>
+            <th>成绩</th>
+        </tr>
+        <% records.forEach(function(record) { %>
+        <tr>
+            <td></td>
+            <td><%= record.no %></td>
+            <td></td>
+            <td><%= record.grade %></td>
+        </tr>
+        <% }) %>
+    </table>
+  </body>
+</html>

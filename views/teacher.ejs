@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <p>你好，亲爱的<%= username %>老师</p>
+    <table>
+        <tr>
+            <th>课堂编号</th>
+            <th>课程编号</th>
+            <!--th>已选人数</th-->
+        </tr>
+    <% classes.forEach(function(cls){ %>
+        <tr>
+            <td><%= cls.no %></td>
+            <td><%= cls.cno %></td>
+            <td>
+                <input type="button" value="登成绩">
+            </td>
+        </tr>
+    <% }) %>
+    <table>
+  </body>
+</html>
