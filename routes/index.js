@@ -6,6 +6,14 @@ var settings = require('./../settings');
 var conn = mysql.createConnection(settings.mysqlConfig);
 conn.connect();
 
+var checkAuth = function(req, res, next) {
+    if(!req.session.user_id) {
+        res.redirect('/login');
+    } else {
+        next();
+    }
+};
+
 var render_stu = function(username, res) {
     conn.query("select * from course", function(err, courses){ 
         if(err) throw err;
@@ -36,14 +44,22 @@ var render_ta = function(username, res) {
 router.get('/', function(req, res) {
     res.render('index', { title: '课程管理系统', message: false });
 });
+router.get('/login', function(req, res) {
+    res.render('index', { title: '课程管理系统', message: false });
+});
+router.get('/logout', function(req, res) {
+    delete req.session.user_id;
+    res.redirect('/login');
+});
     
-router.post('/login', function(req, res) {
+router.post('/profile', function(req, res) {
     var username = req.param("username");
     var pwd = req.param("password");
     var sql = util.format("select * from user where name='%s' and password='%s' ", username, pwd);
     conn.query(sql, function(err, rows) {
         if(err) throw err;
         if(rows.length) {
+            req.session.user_id = username;
             if(rows[0].role == "s") {
                 render_stu(username, res);
             } else {
@@ -58,7 +74,7 @@ router.post('/login', function(req, res) {
 //Here need set session when user login.
 //Or the simulated add record post request can attack this website.
 //Now I just try to make things simple.
-router.post("/:user/addRecord", function(req, res) {
+router.post("/:user/addRecord", checkAuth, function(req, res) {
     var user = req.param("user");
     var cno = parseInt(req.param("cno"));
     var clsno = parseInt(req.param("clsno"));
@@ -71,7 +87,7 @@ router.post("/:user/addRecord", function(req, res) {
 
 //Same attack like the above add record request.
 //Need set user login session.
-router.get("/:clsno/addGrade", function(req, res) {
+router.get("/:clsno/addGrade", checkAuth, function(req, res) {
     var clsno = parseInt(req.param("clsno"));
     var sql = util.format("select * from record where clsno=%d", clsno);
     var cls_sql = util.format("select * from class, course where clsno=%d and class.cno=course.cno", clsno);
@@ -98,7 +114,7 @@ var handle_mul_update = function(cnt, l, res, clsno) {
     
 };
 
-router.post("/:clsno/commitGrade", function(req, res) {
+router.post("/:clsno/commitGrade", checkAuth, function(req, res) {
     var clsno = parseInt(req.param("clsno"));
     var snames = req.param("sname");
     var grades = req.param("grade");

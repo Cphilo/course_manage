@@ -3,10 +3,12 @@ var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('cookie-session');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var secret = require('./secret.js');
 
 var app = express();
 
@@ -19,6 +21,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(session({
+    keys:[secret.sessionKey1, secret.sessionKey2]
+}));
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 

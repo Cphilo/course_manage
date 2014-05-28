@@ -6,7 +6,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <p>您好，亲爱的<%= cls.tname %>老师</p>
+    <p>您好，亲爱的<%= cls.tname %>老师 <a href="/logout">退出</a></p>
     <h4>您正在登课堂编号为<%= cls.clsno %>，课程名为
         <%= cls.cname %>的学生成绩</h4>
     <form method="post" action="/<%= cls.clsno %>/commitGrade">
