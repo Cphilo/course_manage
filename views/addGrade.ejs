@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <p>您好，亲爱的<%= cls.tname %>老师</p>
+    <h4>您正在登课堂编号为<%= cls.clsno %>，课程名为
+        <%= cls.cname %>的学生成绩</h4>
+    <form method="post" action="/<%= cls.clsno %>/commitGrade">
+    <table>
+        <tr>
+            <th>学生名字</th>
+            <th>学生分数</th>
+        </tr>
+        <% records.forEach(function(record) { %>
+        <tr>
+            <td><%= record.sname %></td>
+            <td>
+                <input type="hidden" name="sname" 
+                    value="<%= record.sname %>">
+                <input type="text" 
+                value="<%= record.grade %>" name="grade" 
+                style="width:50px;">
+            </td>
+        </tr>
+        <% }) %>
+    </table>
+    <input type="submit" value="提交"> 
+    </form>
+  </body>
+</html>

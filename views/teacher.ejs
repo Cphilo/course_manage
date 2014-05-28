@@ -6,19 +6,22 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <p>你好，亲爱的<%= username %>老师</p>
+    <p>您好，亲爱的<%= username %>老师</p>
+    <h4>下面是您任课的课堂列表</h4>
     <table>
         <tr>
             <th>课堂编号</th>
-            <th>课程编号</th>
-            <!--th>已选人数</th-->
+            <th>课程名称</th>
+            <!--th>课堂人数</th-->
         </tr>
     <% classes.forEach(function(cls){ %>
         <tr>
             <td><%= cls.clsno %></td>
-            <td><%= cls.cno %></td>
+            <td><%= cls.cname %></td>
             <td>
-                <input type="button" value="登成绩">
+                <form action="/<%= cls.clsno %>/addGrade">
+                    <input type="submit" value="登成绩">
+                </form>
             </td>
         </tr>
     <% }) %>
