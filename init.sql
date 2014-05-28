@@ -14,21 +14,21 @@ create table course (
     primary key (cno)
 );
 create table class (
-    no int,
+    clsno int,
     cno int,
     tname varchar(20),
     smax int,
     foreign key (cno) references course(cno),
     foreign key (tname) references user(name),
-    primary key (no) 
+    primary key (clsno) 
 );
 create table record (
     sname varchar(20),
-    no int,
+    clsno int,
     grade float,
     foreign key (sname) references user(name),
-    foreign key (no) references class(no),
-    primary key (sname, no)
+    foreign key (clsno) references class(clsno),
+    primary key (sname, clsno)
 );
 insert into user values ("cll", "123", "s"), ("xmy", "123", "t"),
     ("pzd", "123", "s"), ("xlp", "123", "t"), ("chz", "123", "s"),

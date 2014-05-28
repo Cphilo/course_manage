@@ -4,22 +4,53 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $("#courseName").change(function() {
+            var courseNo = $(this).val();
+            $.get("/"+courseNo+"/getClasses", function(data) {
+                var html = "";
+                data.forEach(function(cls) {
+                    html += "<option value='"+cls.clsno+"'>"+cls.clsno+"</option>";
+                });
+                $("#classNo").html(html);
+            });    
+        });
+        $("#classNo").change(function() {
+            var classNo = $(this).val();
+            $.get("/"+classNo+"/getTa", function(data) {
+                var html = "";
+                data.forEach(function(ta) {
+                    html += "<option value='"+ta.name+"'>"+ta.name+"</option>";
+                });
+                $("#classTa").html(html);
+            });
+        });
+    });    
+    </script>
   </head>
   <body>
     <p>你好，亲爱的<%= username %>同学</p>
     <h4>你可以在这里进行选课</h4>
-    <form mathod="post" action="/<%= username %>/add_course">
+    <form method="post" action="/<%= username %>/addRecord">
         课程名:
-        <select>
+        <select id="courseName" name="cno">
+            <option selected>无</option>
             <% courses.forEach(function(course) { %>
-            <option value="course.cno">
+            <option value="<%= course.cno %>">
                 <%= course.cname %>
             </option>
             <% }) %>
         </select>
-        课堂名:<select>
-                </select>
-        任课教师:<select></select>
+        课堂名:
+        <select id="classNo" name="clsno">
+            <option selected>无</option>
+        </select>
+        任课教师:
+        <select id="classTa" name="tname">
+            <option>无</option>        
+        </select>
         <input type="submit" value="选课">
     </form>
     <h4>下面是你的所有选课记录</h4>
@@ -32,9 +63,9 @@
         </tr>
         <% records.forEach(function(record) { %>
         <tr>
-            <td></td>
-            <td><%= record.no %></td>
-            <td></td>
+            <td><%= record.cname %></td>
+            <td><%= record.clsno %></td>
+            <td><%= record.tname %></td>
             <td><%= record.grade %></td>
         </tr>
         <% }) %>
